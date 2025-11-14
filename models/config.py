@@ -1,3 +1,2 @@
-from . import user
-
-active_models = [user]
+from .User import User
+from .Course import Course
