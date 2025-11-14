@@ -1,8 +1,9 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from .TimestampMixin import TimestampMixin
 from sqlalchemy import String, Boolean
 import sqlalchemy as sa
+from typing import List
 
 class User(SQLModel, TimestampMixin, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -15,3 +16,5 @@ class User(SQLModel, TimestampMixin, table=True):
     avtar_url: Optional[str] = Field(default=None, sa_column=sa.Column(String, nullable=True))
     phone_number: Optional[str] = Field(default=None, sa_column=sa.Column(String, nullable=True))
     
+    payments: List["Payment"] = Relationship(back_populates="user")
+    courses_purchased: List["CoursePurchased"] = Relationship(back_populates="user")

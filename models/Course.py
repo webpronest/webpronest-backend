@@ -11,3 +11,4 @@ class Course(SQLModel, TimestampMixin, table=True):
     price: float = Field(sa_column=sa.Column(sa.Float, nullable=False))
     is_active: bool = Field(default=True, sa_column=sa.Column(Boolean, nullable=False))
     
+    purchases: Optional["CoursePurchased"] = Relationship(back_populates="course")
