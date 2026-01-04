@@ -29,14 +29,14 @@ jobs:
       - name: Create CI env file
         run: |
           cat <<-EOF > .env.ci
-            DATABASE_URL=sqlite:///./test.db
-            SECRET_KEY=test-secret
-            ENV=ci
-            GOOGLE_CLIENT_ID=
-            GOOGLE_CLIENT_SECRET=
-            GOOGLE_REDIRECT_URI=
-            JWT_SECRET=dummy
-            JWT_ALGORITHM=HS256
+          DATABASE_URL=sqlite:///./test.db
+          SECRET_KEY=test-secret
+          ENV=ci
+          GOOGLE_CLIENT_ID=
+          GOOGLE_CLIENT_SECRET=
+          GOOGLE_REDIRECT_URI=
+          JWT_SECRET=dummy
+          JWT_ALGORITHM=HS256
           EOF
       
       - name: Verify env file
