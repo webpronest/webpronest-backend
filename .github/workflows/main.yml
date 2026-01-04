@@ -42,6 +42,10 @@ jobs:
       - name: Verify env file
         run: |
           cat -A .env.ci
+
+      - name: Run Alembic migrations
+        run: |
+          docker run --rm --env-file .env.ci webpronest:${{ github.sha }} alembic upgrade head
           
       - name: Start container
         run: |
