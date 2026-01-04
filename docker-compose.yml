@@ -18,6 +18,11 @@ services:
       - "host.docker.internal:host-gateway"
     profiles:
       - dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   app_prod:
     image: ${IMAGE_NAME:-webpronest-backend}:${TAG:-latest}
@@ -35,6 +40,21 @@ services:
       - "host.docker.internal:host-gateway"
     profiles:
       - prod
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-8000}/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 
 volumes:
   db_data: {}
