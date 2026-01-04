@@ -63,9 +63,10 @@ services:
       - ci
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   app_prod:
     image: ${IMAGE_NAME:-webpronest-backend}:${TAG:-latest}

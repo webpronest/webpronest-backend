@@ -54,6 +54,16 @@ jobs:
         run: |
           docker compose --profile ci up -d app_ci
 
+      - name: Dump container state
+        run: |
+          docker compose --profile ci ps
+          docker compose --profile ci logs app_ci
+
+      - name: Manual curl test
+        run: |
+          sleep 10
+          curl -v http://localhost:8000/health || true
+
       - name: Health check
         run: |
           echo "Waiting for application to become healthy..."
