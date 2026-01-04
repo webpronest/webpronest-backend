@@ -59,7 +59,7 @@ jobs:
           echo "Waiting for application to become healthy..."
           for i in {1..40}; do
             STATUS=$(docker compose --profile ci ps --services --filter "status=running")
-            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose --profile ci ps -q app))
+            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose --profile ci ps -q app_ci))
             echo "Current health: $HEALTH"
             if [ "$HEALTH" = "healthy" ]; then
               echo "Container is healthy!"
