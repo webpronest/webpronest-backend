@@ -52,13 +52,11 @@ jobs:
         run: |
           cat <<-EOF > .env
           DATABASE_URL=postgresql+asyncpg://testuser:testpass@postgres:5432/testdb
-          SECRET_KEY=test-secret
-          ENV=ci
           GOOGLE_CLIENT_ID=
           GOOGLE_CLIENT_SECRET=
           GOOGLE_REDIRECT_URI=
-          JWT_SECRET=dummy
-          JWT_ALGORITHM=HS256
+          JWT_SECRET=
+          JWT_ALGORITHM=
           EOF
       
       - name: Verify env file
