@@ -36,14 +36,19 @@ COPY . .
 RUN useradd -m appuser
 USER appuser
 
-
+# -------------------------
+# Additional system dependencies
+# (needed for building some Python packages)
+# -------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # -------------------------
 # Healthcheck
 # -------------------------
 HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
   CMD curl -f http://localhost:8000/health || exit 1
-
 
 # -------------------------
 # Runtime
