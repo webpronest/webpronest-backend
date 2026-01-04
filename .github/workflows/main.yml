@@ -29,7 +29,7 @@ jobs:
       - name: Create CI env file
         run: |
           cat <<-EOF > .env.ci
-          DATABASE_URL=sqlite+aiosqlite:///app/test.db
+          DATABASE_URL=sqlite+aiosqlite:///:memory:
           SECRET_KEY=test-secret
           ENV=ci
           GOOGLE_CLIENT_ID=
