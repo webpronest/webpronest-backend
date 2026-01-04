@@ -31,18 +31,18 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # -------------------------
-# Security: non-root user
-# -------------------------
-RUN useradd -m appuser
-USER appuser
-
-# -------------------------
 # Additional system dependencies
 # -------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# -------------------------
+# Security: non-root user
+# -------------------------
+RUN useradd -m appuser
+USER appuser
 
 
 # -------------------------
