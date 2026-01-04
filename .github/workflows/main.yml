@@ -51,7 +51,7 @@ jobs:
       - name: Create CI env file
         run: |
           cat <<-EOF > .env.ci
-          DATABASE_URL=postgresql+asyncpg://testuser:testpass@localhost:5432/testdb
+          DATABASE_URL=postgresql+asyncpg://testuser:testpass@postgres:5432/testdb
           SECRET_KEY=test-secret
           ENV=ci
           GOOGLE_CLIENT_ID=
