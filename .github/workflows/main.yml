@@ -69,7 +69,7 @@ jobs:
             sleep 3
           done
           echo "Container failed health check!"
-          docker compose --profile ci logs app
+          docker compose --profile ci logs app_ci
           exit 1
 
   deploy:
