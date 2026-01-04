@@ -42,6 +42,11 @@ jobs:
         run: |
           cat -A .env
 
+      - name: Ensure Docker network exists
+        run: |
+          docker network inspect webpronest-network >/dev/null 2>&1 \
+            || docker network create webpronest-network
+
       - name: Build Docker containers
         run: |
           docker compose --profile ci up -d postgres
@@ -113,10 +118,14 @@ jobs:
             git fetch --all
             git reset --hard origin/main
 
+            # Ensure Docker network exists
+            docker network inspect webpronest-network >/dev/null 2>&1 \
+              || docker network create webpronest-network
+
             # Start production services using the `prod` profile (rebuild if needed)
-            docker compose --profile prod build app_prod
-            docker compose --profile prod run --rm app_prod alembic upgrade head
-            docker compose --profile prod up -d app_prod
+            docker compose --profile prod build webpronest-backend-prod
+            docker compose --profile prod run --rm webpronest-backend-prod alembic upgrade head
+            docker compose --profile prod up -d webpronest-backend-prod
 
             # Prune old images to save space
             docker image prune -f
