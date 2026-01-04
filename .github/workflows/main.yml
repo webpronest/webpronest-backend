@@ -50,8 +50,8 @@ jobs:
 
       - name: Create CI env file
         run: |
-          cat <<-EOF > .env.ci
-          DATABASE_URL=postgresql+asyncpg://testuser:testpass@localhost:5432/testdb
+          cat <<-EOF > .env
+          DATABASE_URL=postgresql+asyncpg://testuser:testpass@postgres:5432/testdb
           SECRET_KEY=test-secret
           ENV=ci
           GOOGLE_CLIENT_ID=
@@ -63,40 +63,36 @@ jobs:
       
       - name: Verify env file
         run: |
-          cat -A .env.ci
+          cat -A .env
+
+      - name: Build & tag image
+        run: |
+          docker compose --profile ci-build build
 
       - name: Run Alembic migrations
         run: |
-          docker run --rm --env-file .env.ci webpronest:${{ github.sha }} alembic upgrade head
-          
+          docker compose --profile ci-build run --rm app alembic upgrade head
+
       - name: Start container
         run: |
-          docker run -d --env-file .env.ci --name app_test -p 8000:8000 webpronest:${{ github.sha }}
-          docker inspect --format '{{json .State.Health}}' app_test
+          docker compose --profile ci-build up -d
 
-      # 🔥 ADD THIS HEALTH CHECK STEP
       - name: Health check
         run: |
           echo "Waiting for application to become healthy..."
           for i in {1..40}; do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' app_test || echo "starting")
-
-            echo "Current status: $STATUS"
-
-            if [ "$STATUS" = "healthy" ]; then
+            STATUS=$(docker compose --profile ci-build ps --services --filter "status=running")
+            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose --profile ci-build ps -q app))
+            echo "Current health: $HEALTH"
+            if [ "$HEALTH" = "healthy" ]; then
               echo "Container is healthy!"
               exit 0
             fi
-
-            echo "Health not healthy yet... "
-            echo "Showing docker logs"
-            docker logs app_test
-            echo "retrying ($i/40)"
+            echo "Health not healthy yet... retrying ($i/40)"
             sleep 3
           done
-
           echo "Container failed health check!"
-          docker logs app_test
+          docker compose --profile ci-build logs app
           exit 1
 
   deploy:
