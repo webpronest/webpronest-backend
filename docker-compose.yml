@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  app:
+  app:  
     image: ${IMAGE_NAME:-webpronest-backend-dev}:${TAG:-latest}
     build:
       context: .
@@ -41,6 +41,8 @@ services:
       retries: 20
     profiles:
       - ci
+    networks:
+      - app-network
 
   app_ci:
     image: ${IMAGE_NAME:-webpronest-backend-ci}:${TAG:-latest}
