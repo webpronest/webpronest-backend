@@ -19,3 +19,4 @@ class User(SQLModel, TimestampMixin, table=True):
     
     payments: List["Payment"] = Relationship(back_populates="user")
     courses_purchased: List["CoursePurchased"] = Relationship(back_populates="user")
+    
