@@ -64,6 +64,12 @@ jobs:
           sleep 10
           curl -v http://localhost:8000/health || true
 
+      - name: Debug healthcheck inside container
+        run: |
+          docker compose --profile ci exec app_ci which curl
+          docker compose --profile ci exec app_ci curl http://localhost:8000/health
+
+
       - name: Health check
         run: |
           echo "Waiting for application to become healthy..."
