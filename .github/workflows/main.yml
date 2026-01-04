@@ -34,8 +34,8 @@ jobs:
           GOOGLE_CLIENT_ID=
           GOOGLE_CLIENT_SECRET=
           GOOGLE_REDIRECT_URI=
-          JWT_SECRET=
-          JWT_ALGORITHM=
+          JWT_SECRET=dummy_secret_key_for_ci
+          JWT_ALGORITHM=RS256
           EOF
       
       - name: Verify env file
