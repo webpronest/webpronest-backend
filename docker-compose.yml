@@ -27,7 +27,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      
+
   postgres:
     image: postgres:15
     environment:
@@ -40,7 +40,7 @@ services:
       timeout: 3s
       retries: 20
     profiles:
-      - ci-build
+      - ci
 
   app_ci:
     image: ${IMAGE_NAME:-webpronest-backend-ci}:${TAG:-latest}
@@ -60,7 +60,7 @@ services:
     networks:
       - app-network
     profiles:
-      - ci-build
+      - ci
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 30s

@@ -44,22 +44,22 @@ jobs:
 
       - name: Build & tag image
         run: |
-          docker compose --profile ci-build build
+          docker compose --profile ci build
 
       - name: Run Alembic migrations
         run: |
-          docker compose --profile ci-build run --rm app alembic upgrade head
+          docker compose --profile ci run --rm app alembic upgrade head
 
       - name: Start container
         run: |
-          docker compose --profile ci-build up -d
+          docker compose --profile ci up -d
 
       - name: Health check
         run: |
           echo "Waiting for application to become healthy..."
           for i in {1..40}; do
-            STATUS=$(docker compose --profile ci-build ps --services --filter "status=running")
-            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose --profile ci-build ps -q app))
+            STATUS=$(docker compose --profile ci ps --services --filter "status=running")
+            HEALTH=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose --profile ci ps -q app))
             echo "Current health: $HEALTH"
             if [ "$HEALTH" = "healthy" ]; then
               echo "Container is healthy!"
@@ -69,7 +69,7 @@ jobs:
             sleep 3
           done
           echo "Container failed health check!"
-          docker compose --profile ci-build logs app
+          docker compose --profile ci logs app
           exit 1
 
   deploy:
