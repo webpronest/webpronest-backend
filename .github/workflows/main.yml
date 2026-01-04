@@ -48,7 +48,7 @@ jobs:
 
       - name: Run Alembic migrations
         run: |
-          docker compose --profile ci run --rm app alembic upgrade head
+          docker compose --profile ci run --rm app_ci alembic upgrade head
 
       - name: Start container
         run: |
