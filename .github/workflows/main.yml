@@ -25,10 +25,27 @@ jobs:
           tags: webpronest:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Create CI env file
+        run: |
+          cat <<-EOF > .env.ci
+            DATABASE_URL=sqlite:///./test.db
+            SECRET_KEY=test-secret
+            ENV=ci
+            GOOGLE_CLIENT_ID=
+            GOOGLE_CLIENT_SECRET=
+            GOOGLE_REDIRECT_URI=
+            JWT_SECRET=dummy
+            JWT_ALGORITHM=HS256
+          EOF
+      
+      - name: Verify env file
+        run: |
+          cat -A .env.ci
           
       - name: Start container
         run: |
-          docker run -d --name app_test -p 8000:8000 webpronest:${{ github.sha }}
+          docker run -d --env-file .env.ci --name app_test -p 8000:8000 webpronest:${{ github.sha }}
           docker inspect --format '{{json .State.Health}}' app_test
 
       # 🔥 ADD THIS HEALTH CHECK STEP
