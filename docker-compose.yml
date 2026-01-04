@@ -9,17 +9,57 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "8000:8000"
     volumes:
       - ./:/app:cached
     networks:
       - app-network
-      - default
     extra_hosts:
       - "host.docker.internal:host-gateway"
     profiles:
       - dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: testdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    profiles:
+      - ci-build
+
+  app_ci:
+    image: ${IMAGE_NAME:-webpronest-backend-ci}:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app:cached
+    networks:
+      - app-network
+    profiles:
       - ci-build
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
