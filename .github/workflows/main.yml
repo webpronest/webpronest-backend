@@ -65,7 +65,6 @@ jobs:
               echo "Container is healthy!"
               exit 0
             fi
-            docker compose --profile ci logs app_ci
             echo "Health not healthy yet... retrying ($i/40)"
             sleep 3
           done
