@@ -34,19 +34,19 @@ jobs:
             sleep 2
           done
           
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: false
-          load: true
-          tags: webpronest:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # - name: Build Docker image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile
+      #     push: false
+      #     load: true
+      #     tags: webpronest:${{ github.sha }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
       - name: Create CI env file
         run: |
